@@ -1,0 +1,104 @@
+{%- if landscape %}
+\begin{% raw %}{{% endraw %}landscapeRotate{% raw %}}{% endraw %}
+{%- endif %}
+{%- if font_size %}
+\begin{% raw %}{{% endraw %}{{font_size}}{% raw %}}{% endraw %}
+{% endif %}
+{% if tabcolsep and tabcolsep != "6pt" %}
+\tabcolsep={{tabcolsep}} %adjust inter column space
+{% endif %}
+\begin{longtable}
+{%- set position = parse_table(table_styles, 'position') %}
+{%- if position is not none %}
+[{{position}}]
+{%- endif %}
+{%- set column_format = parse_table(table_styles, 'column_format') %}
+{% raw %}{{% endraw %}{{column_format}}{% raw %}}{% endraw %}
+
+{% for style in table_styles %}
+{% if style['selector'] not in ['position', 'position_float', 'caption', 'toprule', 'midrule', 'bottomrule', 'column_format', 'label'] %}
+\{{style['selector']}}{{parse_table(table_styles, style['selector'])}}
+{% endif %}
+{% endfor %}
+{% if caption and caption is string %}
+\caption{% raw %}{{% endraw %}{{caption}}{% raw %}}{% endraw %}
+{%- set label = parse_table(table_styles, 'label') %}
+{%- if label is not none %}
+ \label{{label}}
+{%- endif %} \\ {%- if hlines %} \hline{%- endif %}
+
+{% elif caption and caption is sequence %}
+\caption[{{caption[1]}}]{% raw %}{{% endraw %}{{caption[0]}}{% raw %}}{% endraw %}
+{%- set label = parse_table(table_styles, 'label') %}
+{%- if label is not none %}
+ \label{{label}}
+{%- endif %} \\ {%- if hlines %} \hline{%- endif %}
+
+{% else %}
+{%- set label = parse_table(table_styles, 'label') %}
+{%- if label is not none %}
+\label{{label}} \\ {%- if hlines %} \hline{%- endif %}
+
+{% endif %}
+{% endif %}
+{% set toprule = parse_table(table_styles, 'toprule') %}
+{% if toprule is not none %}
+\{{toprule}}
+{% endif %}
+{% for c in head_styled %}{%- if not loop.first %} & {% endif %}{{c}}{% endfor %} \\ {%- if hlines %} \hline{%- endif %}
+
+{% set midrule = parse_table(table_styles, 'midrule') %}
+{% if midrule is not none %}
+\{{midrule}}
+{% endif %}
+\endfirsthead
+{% if caption and caption is string %}
+\caption[]{% raw %}{{% endraw %}{{caption}}{% raw %}}{% endraw %} \\ {%- if hlines %} \hline{%- endif %}
+
+{% elif caption and caption is sequence %}
+\caption[]{% raw %}{{% endraw %}{{caption[0]}}{% raw %}}{% endraw %} \\ {%- if hlines %} \hline{%- endif %}
+
+{% endif %}
+{% if toprule is not none %}
+\{{toprule}}
+{% endif %}
+{% for c in head_styled %}{%- if not loop.first %} & {% endif %}{{c}}{% endfor %} \\ {%- if hlines %} \hline{%- endif %}
+
+{% if midrule is not none %}
+\{{midrule}}
+{% endif %}
+\endhead
+{% if midrule is not none %}
+\{{midrule}}
+{% endif %}
+\multicolumn{% raw %}{{% endraw %}{{colnum}}{% raw %}}{% endraw %}{r}{Continued on next page} \\
+{% if midrule is not none %}
+\{{midrule}}
+{% endif %}
+\endfoot
+{% set bottomrule = parse_table(table_styles, 'bottomrule') %}
+{% if bottomrule is not none %}
+\{{bottomrule}}
+{% endif %}
+\endlastfoot
+{% for row in body %}
+{% for c in row %}{% if not loop.first %} & {% endif %}
+  {%- if c.type == 'th' %}{{parse_header(c, multirow_align, multicol_align)}}{% else %}{{parse_cell(c.cellstyle, c.display_value, convert_css)}}{% endif %}
+{%- endfor %} \\ {%- if hlines %} \hline{%- endif %}
+
+{% if clines and clines[loop.index] | length > 0 %}
+  {%- for cline in clines[loop.index] %}{% if not loop.first %} {% endif %}{{ cline }}{% endfor %}
+
+{% endif %}
+{% endfor %}
+\end{longtable}
+{% raw %}{% endraw %}
+{% if tabcolsep and tabcolsep != "6pt" %}
+\tabcolsep=6pt %remove inter column space
+{% endif %}
+{%- if font_size %}
+\end{% raw %}{{% endraw %}{{font_size}}{% raw %}}{% endraw %}
+{%- endif %}
+{%- if landscape %}
+\end{% raw %}{{% endraw %}landscapeRotate{% raw %}}{% endraw %}
+{%- endif -%}
