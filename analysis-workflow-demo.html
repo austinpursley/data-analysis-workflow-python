@@ -14259,9 +14259,10 @@ a.anchor-link {
 
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Data-Analysis-Workflow-with-Python">Data Analysis Workflow with Python<a class="anchor-link" href="#Data-Analysis-Workflow-with-Python">&#182;</a></h1><p>I want to document how data, given in the form of CSV files or similar, can be collected, analyzed, and then reported with Python. The tools I'll use are Python + pandas for the data analysis, Python + matplotlib for plotting, and Python + pandas + Jinja for a LaTeX report. This won't be anything substantive, just minimal example to get the point across of how this workflow goes.</p>
-<h2 id="Step-1:-Collect-Data">Step 1: Collect Data<a class="anchor-link" href="#Step-1:-Collect-Data">&#182;</a></h2><p>We want to first organize data as best as we can for analysis. This can be a challenge because 'raw' data can come from disparate sources.</p>
-<p>In this demo, I've created some dummy data to reflect a made-up scenario where the data needs to be collected and combined into one place. There are (1) three types of sensors, (2) each sensor has three units, (3) each unit has undergone three trials of data collection, and (4) each trial has three data points. Every sensor has created its own CSV data file.</p>
+<h1 id="Data-Analysis-Workflow-with-Python">Data Analysis Workflow with Python<a class="anchor-link" href="#Data-Analysis-Workflow-with-Python">&#182;</a></h1><p>Author: Austin Pursley<br>
+Date: 9/13/2022</p>
+<p>Here my goal is to document my current understanding of a data analysis workflow with Python. This demo will reflect a generic / made-up scenario, similar to device testing scenarios I'm familiar with. Nothing too substantive, just enough to illustrate how this goes. In this workflow, the data is given in the form of CSV files or similar, and will be collected, analyzed, and reported using pandas, matplotlib, Jinja, etc.</p>
+<h2 id="Step-1:-Collect-Data">Step 1: Collect Data<a class="anchor-link" href="#Step-1:-Collect-Data">&#182;</a></h2><p>We want to first organize data as best as we can for analysis. This can be a challenge because 'raw' data can come from disparate sources. I set-up the dummy data to reflect this; in the made-up scenario, there are (1) three types of sensors, (2) each sensor has three units, (3) each unit has undergone three trials of data collection, and (4) each trial has three data points. Every sensor has created its own CSV file, so data from those files will have to be collected and formed into one whole.</p>
 <h3 id="File-list">File list<a class="anchor-link" href="#File-list">&#182;</a></h3><p>The first step is to get a list of all of the data files. The CSV files are all in a "data" folder, and then themselves within their own sub folders. A recursive glob method can find all the CSV files within this folder hierarchy.</p>
 
 </div>
@@ -15596,7 +15597,7 @@ dtype: object</pre>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Pandas has built in methods to plot data, which use the matplotlib library by default. However, these methods can be cumbersome for some cases. I almost always skip them and use matplotlib "as is".</p>
+<p>Pandas has built in methods to plot data, which use the matplotlib library by default. However, these methods can be cumbersome. I almost always skip them and use matplotlib "as is".</p>
 <p>Below I've made two plots to demo matplotlib. The first was a result of my intuition to first try plotting every trial. It's a good example of how to get pandas grouping and matplotlib plotting to work together. However, I realized it could be improved by plotting by sensor unit, which is seen in the second plot.</p>
 
 </div>
@@ -15747,15 +15748,16 @@ dtype: object</pre>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Now that I've done the analysis with Python, I want to present those results in a LaTeX document. I just use LaTeX because I'm familiar with it through work and know lots of other folks do too, but I would think a Juypter notebook like this one would work just as well.</p>
+<p>Now that I've done the analysis with Python, I want to present those results in a LaTeX document. I just use LaTeX because I'm familiar with it through work. I think a Juypter notebook like this one would work just as well.</p>
 
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Tables">Tables<a class="anchor-link" href="#Tables">&#182;</a></h3><p>Panda has a <a href="https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.to_latex.html">'to_latex'</a> method for converting dataframes to LaTeX table code. It is decent, but not as good as its HTML/CSS counterpart because it is lacking features and has a few bugs. I've managed to make it work through some workarounds. I've especially found it works out better to aim for a "half-way" solution that you can be tailored and polished later in the LaTeX editor (e.g. Overleaf).</p>
-<p>I'm going to show how two different styles of LaTeX tables can be achieved. One is the booktabs style, which I think most people use and prefer. The other is what might be considered the default "lines" table.</p>
-<h4 id="Booktabs-style">Booktabs style<a class="anchor-link" href="#Booktabs-style">&#182;</a></h4><p>A screenshot of one of the booktabs styled tables:</p>
+<h3 id="Tables">Tables<a class="anchor-link" href="#Tables">&#182;</a></h3><p>Panda has a <a href="https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.to_latex.html">'to_latex'</a> method for converting dataframes to LaTeX table code. It is decent, but not as good as its HTML/CSS counterpart due to lacking features and has a few bugs. I've managed to make it work through some workarounds. I've especially found it works out better to aim for a "half-way" solution that you can be tailored and polished later in the LaTeX editor (e.g. Overleaf).</p>
+<p>I'm going to show how two different styles of LaTeX tables can be achieved. One is the booktabs style, which is used for a lot of scientific and technical publications. The other is what might be considered the default "lines" table.</p>
+<h4 id="Booktabs-style">Booktabs style<a class="anchor-link" href="#Booktabs-style">&#182;</a></h4><p>The code below is going to generate LaTeX table code for each set of data (i.e. dataframes) I've selected.</p>
+<p>Here is screenshot of what one of these booktabs styled tables will look like after being compiled:</p>
 <p><img src="assets/analysis-workflow-tbl-booktabs-example.png" alt="Example of booktabs styled table"></p>
 
 </div>
@@ -15978,8 +15980,8 @@ dtype: object</pre>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Report-Template">Report Template<a class="anchor-link" href="#Report-Template">&#182;</a></h3><p>I'll use a very basic LaTeX "report" template with Jinja and then use the results data to generate the document. This template can be as complex or as simple as needed, depending perhaps on how much of the report outline is already known. The template I'm using here is just a starting point, good for testing that the elements compile correctly and ready to go where needed. I think it's especially useful for when there are a high number of tables and/or plots, although of course that's not the case here. For actual documents that are pretty simple, it may be make more sense to skip template engines and just save the plots and/or LaTeX table code then figure it out in a LaTeX editor later.</p>
-<p>The code is printed below and the resulting PDF (compiled in Overleaf) can be seen <a href="assets/analysis_pipeline_latex_report.pdf">here</a>. Again, these table and plots probably aren't perfect, just getting them mostly complete and ready for refinement is what I'm after.</p>
+<h3 id="Report-Template">Report Template<a class="anchor-link" href="#Report-Template">&#182;</a></h3><p>I've used Jinja templates to create LaTeX tables and figures, and now I'm going to use another template to generate a full LaTeX document with those tables and figures. The resulting document will be very basic, good for testing elements will compile correctly, but it could be a nearly formed report. Generating the report with a template is especially useful for when there are a high number of tables and/or plots, although of course that's not the case here. For actual documents that are simple, it may be make more sense to skip this report template.</p>
+<p>The generated report is printed below and the resulting PDF (compiled in Overleaf) can be seen <a href="assets/analysis_pipeline_latex_report.pdf">here</a>. Looking at the report, some tables are not set exactly how I'd want them. But, again, the goal was not to generate perfect table and plots, it was just to get them mostly complete and ready for refinement.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
